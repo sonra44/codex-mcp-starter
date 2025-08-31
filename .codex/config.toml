@@ -1,0 +1,43 @@
+## Codex CLI configuration file (TOML)
+#
+# This configuration tells Codex CLI which Model Context Protocol (MCP) servers
+# to launch when the agent is running. Each entry under `mcp_servers` defines
+# a server that will be launched via STDIO. Servers provide features like
+# reading files, searching the codebase, persistent memory, and Git operations.
+
+[mcp_servers]
+
+  ## Filesystem server: exposes the file system to the agent so it can read
+  ## directory listings, file contents and metadata. Uses the official
+  ## @modelcontextprotocol/server-filesystem package.
+  [mcp_servers.filesystem]
+  command = "npx"
+  args = ["-y", "@modelcontextprotocol/server-filesystem", "."]
+
+  ## Ripgrep server: high‑performance text search within the project. This
+  ## allows the agent to quickly find symbols and patterns across large
+  ## repositories. Requires ripgrep to be installed on the host.
+  [mcp_servers.ripgrep]
+  command = "npx"
+  args = ["-y", "mcp-ripgrep@latest"]
+
+  ## Knowledge‑Graph Memory server: provides persistent memory for the
+  ## agent using a JSONL file. The `--memory-path` argument points to
+  ## the local memory store under the project’s `memory` directory so
+  ## memory is versioned with the repository.
+  [mcp_servers.memory]
+  command = "npx"
+  args = [
+    "-y",
+    "mcp-knowledge-graph@latest",
+    "--memory-path",
+    "./memory/memory.jsonl"
+  ]
+
+  ## Git server: secure interface to Git commands (status, diff, commit,
+  ## branch, pull, push, etc.) without invoking shell scripts. Using
+  ## @cyanheads/git-mcp-server ensures consistent behaviour across
+  ## platforms.
+  [mcp_servers.git]
+  command = "npx"
+  args = ["-y", "@cyanheads/git-mcp-server@latest"]
